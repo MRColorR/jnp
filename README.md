@@ -42,11 +42,16 @@ Both images are designed to be versatile, allowing for easy customization:
 - Extend the images by adding your own tools or scripts.
 
 ## Need Help or Found an Issue? ❓
-- For discussions, info, and feature requests, use the Discussion tab.
-- For issues and bug reporting, use the Issue tab.
+- For discussions, info, and feature requests, use the [Discussion](https://github.com/MRColorR/jnp/discussions) tab.
+- For issues and bug reporting, use the [Issue](https://github.com/MRColorR/jnp/issues) tab.
 
 ## Support the Project 🫶
 If you find this project helpful, consider supporting its development by leaving a star ⭐ or contributing to the repository. Your support is greatly appreciated!
 
+## Acknowledgments 🙏
+This project builds upon and is inspired by other excellent open-source projects. Special thanks to:
+
+- [NVIDIA DinD](https://github.com/ehfd/nvidia-dind) for providing the base setup for Docker in Docker (DinD) with NVIDIA GPU support.
+
 # :hash: License
-This project is licensed under the GPL 3.0.
+This project is licensed under the Mozilla Public License 2.0 (MPL 2.0).
