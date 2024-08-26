@@ -101,6 +101,10 @@ RUN curl -sL https://deb.nodesource.com/setup_lts.x | bash - && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+# Copy and prepare dockerd starter script called by supervisor
+COPY start-dockerd.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/start-dockerd.sh
+
 
 # Copy and prepare the entrypoint
 COPY entrypoint.sh /usr/local/bin/

@@ -113,6 +113,11 @@ RUN useradd coder \
     --user-group && \
     echo "coder ALL=(ALL) NOPASSWD:ALL" >>/etc/sudoers.d/nopasswd
 
+# Copy and prepare dockerd starter script called by supervisor
+COPY start-dockerd.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/start-dockerd.sh
+
+
 # Copy and prepare the entrypoint
 COPY entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/entrypoint.sh
