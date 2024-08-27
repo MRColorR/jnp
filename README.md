@@ -19,11 +19,11 @@ JNP provides a complete Docker image that integrates essential programming langu
 - Ensure Docker is installed and running on your machine.
 
 ### Quick Setup Guide
-- Pull the Image: Get the latest JNP Docker image from Docker Hub: `docker pull mrcolorrain/jpn:base`
+- Pull the Image: Get the latest JNP Docker image from Docker Hub: `docker pull mrcolorrain/jnp:base`
 - Run the Container: 
-    - To use Docker in Docker (DinD) start a new container in privileged mode using: `docker run -it --rm --privileged mrcolorrain/jpn:base`
-        - You can also start without privileged mode; the container will work, but the DinD service start will timeout and exit, so you will be able to use Docker only by either running it in privileged mode or by pointing Docker CLI to connect to another running Docker host, starting the container, and passing the env variable DOCKER_HOST: `docker run -it --rm -e DOCKER_HOST=mydockerhost:port mrcolorrain/jpn:base`
-    - To use it with Nvidia GPU support add also the `--gpus` flag: `docker run -it --rm --gpus all --privileged mrcolorrain/jpn:base`
+    - To use Docker in Docker (DinD) start a new container in privileged mode using: `docker run -it --rm --privileged mrcolorrain/jnp:base`
+        - You can also start without privileged mode; the container will work, but the DinD service start will timeout and exit, so you will be able to use Docker only by either running it in privileged mode or by pointing Docker CLI to connect to another running Docker host, starting the container, and passing the env variable DOCKER_HOST: `docker run -it --rm -e DOCKER_HOST=mydockerhost:port mrcolorrain/jnp:base`
+    - To use it with Nvidia GPU support add also the `--gpus` flag: `docker run -it --rm --gpus all --privileged mrcolorrain/jnp:base`
 
 
 ## What's Inside? 📦
