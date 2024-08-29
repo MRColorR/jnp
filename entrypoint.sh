@@ -1,13 +1,7 @@
 #!/bin/bash
 
-# Check if the user is root
-if [ "$EUID" -ne 0 ]; then
-  # If not root, use sudo
-  sudo start-docker.sh
+# Start supervisord and its children
+exec /usr/bin/supervisord
 
-else
-  # If root, call directly
-  start-docker.sh
-fi
-# Execute the provided command
+# Execute specified command
 "$@"

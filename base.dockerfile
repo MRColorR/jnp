@@ -17,7 +17,7 @@ RUN chmod +x /usr/local/bin/setup-locales.sh
 
 # Ensure the system is up-to-date, install and set up locales
 RUN apt-get update && \
-    apt-get full-upgrade -y && \
+    apt-get dist-upgrade -y && \
     apt-get install -y locales && \
     /usr/local/bin/setup-locales.sh && \
     apt-get clean && \
@@ -26,14 +26,11 @@ RUN apt-get update && \
 # Install essential packages
 RUN apt-get update && \
     apt-get install -y \
-    apt-transport-https \
     apt-utils \
     ca-certificates \
-    sudo \
-    openssh-client \
-    iptables \
     gnupg \
     software-properties-common \
+    sudo \
     systemd \
     systemd-sysv \
     tini \
@@ -46,7 +43,10 @@ RUN apt-get update && \
     jq \
     curl \
     wget \
+    git \
     inetutils* \
+    openssh-client \
+    iptables \
     python3 \
     python3-pip \
     python3-venv \
@@ -59,15 +59,12 @@ RUN apt-get update && \
 
 # Install Docker and Nvidia Container Toolkit
 RUN mkdir -pm755 /etc/apt/keyrings && \
-    curl -fsSL "https://download.docker.com/linux/ubuntu/gpg" | gpg --dearmor -o /etc/apt/keyrings/docker.gpg && \
-    chmod a+r /etc/apt/keyrings/docker.gpg && \
+    curl -o /etc/apt/keyrings/docker.asc -fsSL "https://download.docker.com/linux/ubuntu/gpg" && chmod a+r /etc/apt/keyrings/docker.asc && \
     mkdir -pm755 /etc/apt/sources.list.d && \
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(grep UBUNTU_CODENAME= /etc/os-release | cut -d= -f2 | tr -d '\"') stable" > /etc/apt/sources.list.d/docker.list && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(grep UBUNTU_CODENAME= /etc/os-release | cut -d= -f2 | tr -d '\"') stable" > /etc/apt/sources.list.d/docker.list && \
     mkdir -pm755 /usr/share/keyrings && \
-    curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg && \
-    curl -fsSL "https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list" | \
-    sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
-    tee /etc/apt/sources.list.d/nvidia-container-toolkit.list > /dev/null
+    curl -fsSL "https://nvidia.github.io/libnvidia-container/gpgkey" | gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg && \
+    curl -fsSL "https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list" | sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' > /etc/apt/sources.list.d/nvidia-container-toolkit.list
 
 RUN apt-get update && \
     apt-get install -y \
@@ -99,14 +96,6 @@ RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/s
     ./get_helm.sh && \
     rm get_helm.sh
 
-COPY modprobe start-docker.sh entrypoint.sh /usr/local/bin/
-COPY supervisor/ /etc/supervisor/conf.d/
-COPY logger.sh /opt/bash-utils/logger.sh
-
-RUN chmod +x /usr/local/bin/start-docker.sh /usr/local/bin/entrypoint.sh /usr/local/bin/modprobe
-
-VOLUME /var/lib/docker
-
 # Install OpenJDK
 RUN apt-get update && \
     apt-get install -y \
@@ -122,14 +111,21 @@ RUN curl -sL https://deb.nodesource.com/setup_lts.x | bash - && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Copy and prepare dockerd starter script called by supervisor
-COPY start-dockerd.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/start-dockerd.sh
-
-
 # Copy and prepare the entrypoint
-COPY entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/entrypoint.sh
+COPY modprobe entrypoint.sh /usr/local/bin/
+RUN chmod 755 /usr/local/bin/entrypoint.sh /usr/local/bin/modprobe
+
+# Copy and prepare supervisor config
+COPY supervisor/supervisord.conf /etc/supervisord.conf
+RUN chmod 755 /etc/supervisord.conf
+
+# Copy and prepare config for any supervisor managed service
+COPY supervisor/supervisor.d/*.conf /etc/supervisor/conf.d/
+RUN chmod -R 755 /etc/supervisor/conf.d/
+
+
+VOLUME /var/lib/docker
+
 
 # Ensure the ubuntu user is part of the docker group
 RUN usermod -aG docker ubuntu && \
@@ -144,4 +140,4 @@ WORKDIR /home/ubuntu
 
 # Set entrypoint and default command
 ENTRYPOINT ["tini", "--"]
-CMD ["entrypoint.sh", "bash"]
+CMD ["entrypoint.sh"]
