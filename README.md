@@ -1,6 +1,8 @@
 # JNP - Developer's Multi-Language Docker Image
+
+**Leave a star ⭐ if you like this project. Your support is appreciated!🙂 Thank you.**
+
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/mrcolorr/jnp/build-push-images.yml?style=flat&link=https%3A%2F%2Fhub.docker.com%2Fr%2Fmrcolorrain%2Fjnp)
-- Leave a star ⭐ if you like this project 🙂 thank you.
 
 A robust and versatile Docker image designed for developers, featuring preinstalled Java, Node.js, Python, Docker, Kubernetes, Helm, and more. Ideal for building and testing applications in a streamlined and up-to-date environment. This image is also ready to be used as base for remote development environments, making it an excellent starting point for setting up your remote development workspace.  
 
