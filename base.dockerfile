@@ -52,6 +52,7 @@ RUN apt-get update && \
     python3-venv \
     python3-dev \
     python-is-python3 \
+    pipx \
     jupyter-notebook \
     unzip \
     vim \
@@ -59,6 +60,9 @@ RUN apt-get update && \
     rsync && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
+# Ensure pipx is installed and available
+RUN pipx ensurepath
 
 # Install Docker and Nvidia Container Toolkit
 RUN mkdir -pm755 /etc/apt/keyrings && \
