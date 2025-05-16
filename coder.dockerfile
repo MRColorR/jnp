@@ -11,6 +11,9 @@ ENV TZ='Europe/Rome'
 ENV PATH="/root/.local/bin:${PATH}"
 ENV PATH="/home/coder/.local/bin${PATH}"
 
+# Set docker auto start
+ENV DOCKER_AUTO_START="true"
+
 # Set the current user to root to do operations on the image
 USER root
 

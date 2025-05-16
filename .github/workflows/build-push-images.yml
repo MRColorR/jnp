@@ -39,7 +39,7 @@ jobs:
           file: ./base.dockerfile
           platforms: linux/amd64
           push: true
-          # This example pushes two tags: "base" and also "base-<version>"
+          # This pushes two tags: "base" and also "base-<version>"
           tags: |
             ${{ env.IMAGE_NAME }}:base
             ${{ env.IMAGE_NAME }}:base-${{ steps.vars.outputs.VERSION_TAG }}
@@ -53,7 +53,7 @@ jobs:
           file: ./coder.dockerfile
           platforms: linux/amd64
           push: true
-          # This example pushes two tags: "coder" and also "coder-<version>"
+          # This pushes two tags: "coder" and also "coder-<version>"
           tags: |
             ${{ env.IMAGE_NAME }}:coder
             ${{ env.IMAGE_NAME }}:coder-${{ steps.vars.outputs.VERSION_TAG }}
