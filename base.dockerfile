@@ -62,7 +62,9 @@ RUN apt-get update && \
     xz-utils \
     vim \
     nano \
-    rsync
+    rsync \
+# Install tar for Helm
+    tar
 
 # Ensure pipx is installed and available
 RUN pipx ensurepath
@@ -98,11 +100,12 @@ RUN ARCH=$(dpkg --print-architecture) && \
     sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
     rm kubectl kubectl.sha256
 
-# Install Helm using the official script
-RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 && \
-    chmod 700 get_helm.sh && \
-    ./get_helm.sh && \
-    rm get_helm.sh
+# Install Helm (using the package manager as script method is currently broken for arm64)
+RUN curl -fsSL https://baltocdn.com/helm/signing.asc | gpg --dearmor | tee /usr/share/keyrings/helm.gpg > /dev/null && \
+    apt-get install -y --no-install-recommends apt-transport-https && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" > /etc/apt/sources.list.d/helm-stable-debian.list && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends helm
 
 # Install OpenJDK
 RUN apt-get update && \
